@@ -1,0 +1,14 @@
+FROM node:18-alpine AS deps
+
+WORKDIR /usr/server
+
+COPY package*.json ./
+
+RUN npm install -g nodemon
+RUN npm install
+
+COPY . .
+
+EXPOSE 5000
+
+CMD ["npm", "run", "server"]
