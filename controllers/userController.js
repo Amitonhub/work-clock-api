@@ -10,8 +10,8 @@ const distanceLimit = require("../helpers/distanceLimit")     // don't delete st
 
 const registerUser = asyncHandler(async (req, res) => {
     console.log("The Request body is:", req.body)
-    const { username, firstname, lastname, physicaladdress, city, state, zip, roleId, mobilenumber, email, password } = req.body
-    if (!username || !email || !password || !firstname || !lastname || !physicaladdress || !city || !state || !zip || !mobilenumber || !roleId) {
+    const { username, firstname, lastname, physicaladdress, city, state, zip, roleId, mobilenumber, email, designation, password } = req.body
+    if (!username || !email || !password || !firstname || !lastname || !physicaladdress || !city || !state || !zip || !mobilenumber || !roleId || !designation) {
         res.status(400)
         throw new Error("All Fields are mandatory")
     }
@@ -35,6 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
         roleId,
         mobilenumber,
         email,
+        designation,
         password: hashedPassword
     })
     console.log("User Created Successfully", user)
@@ -91,8 +92,8 @@ const loginUser = asyncHandler(async (req, res) => {
         res.cookie("accessToken", accessToken, {
             httpOnly: true,
             expires: new Date('9999-12-31'),
-            secure: true,
-            sameSite: 'none'
+            sameSite: 'strict',
+            secure: true
         });
         res.status(200).json("Access token has been generated successfully.");
     } else {
@@ -110,12 +111,13 @@ const loginUser = asyncHandler(async (req, res) => {
 //access private
 
 const currentUser = asyncHandler(async (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.status(401);
-        throw new Error('Invalid access token');
-    }
-    const accessToken = authHeader.split(' ')[1];
+
+    const cookie = req.cookies;
+    const accessToken = cookie['accessToken']
+    let token;
+        let authHeader = req.headers.authorization || req.headers.Authorization;
+        if (authHeader && authHeader.startsWith("Bearer")) {
+            token = authHeader.split(" ")[1];}
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     const { id } = decoded.user;
     const user = await User.findById(id);
@@ -133,6 +135,7 @@ const currentUser = asyncHandler(async (req, res) => {
             zip: user.zip,
             RoleId: user.roleId,
             mobilenumber: user.mobilenumber,
+            designation: user.designation,
             ipAddress: user.ipAddress,
         });
     } else {
@@ -149,7 +152,7 @@ const authUser = asyncHandler(async (req, res) => {
     const cookie = req.cookies;
     const accessToken = cookie['accessToken']
     if (accessToken) {
-        res.status(200).json("Access-Token Found!")
+        res.status(200).send(accessToken)
     } else {
         res.status(200).json(null)
     }

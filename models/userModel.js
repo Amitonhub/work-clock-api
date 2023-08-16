@@ -6,6 +6,10 @@ const userSchema = mongoose.Schema(
             type: String,
             required: [true, "please add the username"]
         },
+        designation: {
+            type: String,
+            required: [true, "please add the Designation"],
+        },
         firstname: {
             type: String,
             required: [true, "please add the firstname"]

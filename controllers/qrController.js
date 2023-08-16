@@ -7,13 +7,13 @@ const User = require("../models/userModel")
 //access public
 
 const generateQr = asyncHandler(async (req, res) => {
-    const authHeader = req.headers.authorization;
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-        res.status(401);
-        throw new Error('Invalid access token');
-    }
-    const accessToken = authHeader.split(' ')[1];
-    const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
+    const cookie = req.cookies;
+    const accessToken = cookie['accessToken']
+    let token;
+        let authHeader = req.headers.authorization || req.headers.Authorization;
+        if (authHeader && authHeader.startsWith("Bearer")) {
+            token = authHeader.split(" ")[1];}
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     const { id } = decoded.user;
     const user = await User.findById(id);
 
