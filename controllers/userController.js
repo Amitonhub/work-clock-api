@@ -114,9 +114,10 @@ const currentUser = asyncHandler(async (req, res) => {
     const cookie = req.cookies;
     const accessToken = cookie['accessToken']
     let token;
-        let authHeader = req.headers.authorization || req.headers.Authorization;
-        if (authHeader && authHeader.startsWith("Bearer")) {
-            token = authHeader.split(" ")[1];}
+    let authHeader = req.headers.authorization || req.headers.Authorization;
+    if (authHeader && authHeader.startsWith("Bearer")) {
+        token = authHeader.split(" ")[1];
+    }
     const decoded = jwt.verify(accessToken, process.env.ACCESS_TOKEN_SECRET);
     const { id } = decoded.user;
     const user = await User.findById(id);
@@ -157,4 +158,13 @@ const authUser = asyncHandler(async (req, res) => {
     }
 });
 
-module.exports = { registerUser, loginUser, currentUser, authUser }
+//desc Logout user
+//route GET users/logout
+//access private
+const logoutUser = asyncHandler(async (req, res) => {
+    debugger;
+    res.clearCookie('accessToken'); 
+    res.status(200).json("Logged out successfully.");
+  });
+
+module.exports = { registerUser, loginUser, currentUser, authUser, logoutUser }
