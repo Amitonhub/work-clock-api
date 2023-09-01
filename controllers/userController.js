@@ -162,8 +162,13 @@ const authUser = asyncHandler(async (req, res) => {
 //route GET users/logout
 //access private
 const logoutUser = asyncHandler(async (req, res) => {
-    debugger;
-    res.clearCookie('accessToken'); 
+    // res.clearCookie('accessToken'); 
+    res.cookie("accessToken", "", {
+        httpOnly: true, 
+        secure: true,
+        sameSite: "none",    
+        expires: new Date(1)
+    });
     res.status(200).json("Logged out successfully.");
   });
 
