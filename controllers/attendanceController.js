@@ -9,10 +9,10 @@ const moment = require('moment')
 
 const attendance = asyncHandler(async (req, res) => {
   const { punchType } = req.body;
-  // if (!punchType) {
-  //   res.status(400);
-  //   throw new Error("All fields are mandatory!");
-  // }
+  if (!punchType) {
+    res.status(400);
+    throw new Error("All fields are mandatory!");
+  }
   const today = new Date();
   const cookie = req.cookies;
   const accessToken = cookie['accessToken']
@@ -93,4 +93,31 @@ const getAttendanceByDate = asyncHandler(async (req, res) => {
   }
 });
 
-module.exports = { attendance, getAttendanceByDate, getAllAttendanceById }
+//desc get attendance by a period of user
+//route GET /attendance/:user_id/:from_date/:to_date
+//access private
+
+const getAttendanceOfPeriod = asyncHandler(async (req, res) => {
+  const { user_id, from_date, to_date } = req.body;
+
+  try {
+    const parsedFromDate = new Date(from_date);
+    const parsedToDate = new Date(to_date);
+    if (isNaN(parsedFromDate && parsedToDate)) {
+      return res.status(400).json({ error: 'Invalid date format' });
+    }
+    const attendance = await Attendance.find({
+      user_id,
+      date:
+      {
+        $gte: new Date(from_date),
+        $lte: moment(new Date(to_date)).add(1, 'day')
+      },
+    });
+    res.json(attendance);
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+module.exports = { attendance, getAttendanceByDate, getAllAttendanceById, getAttendanceOfPeriod }

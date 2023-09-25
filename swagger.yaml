@@ -1,0 +1,223 @@
+openapi: 3.0.0
+info:
+  title: Work Clock API
+  version: 1.0.0
+  description: Attendance Application Using QR Code
+  contact:
+    name: Amit & Karun
+servers:
+  - url: http://localhost:5000
+  - url: https://work-clock-api.onrender.com
+paths:
+  /api/users/register:
+    post:
+      summary: Register a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # Define your request body properties here
+      responses:
+        '200':
+          description: User registered successfully
+        '400':
+          description: Bad request
+  /api/users/login:
+    post:
+      summary: Login as a user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # Define your request body properties here
+      responses:
+        '200':
+          description: User logged in successfully
+        '401':
+          description: Unauthorized
+  /api/users/current:
+    get:
+      summary: Get current user details
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Current user details retrieved successfully
+        '401':
+          description: Unauthorized
+  /api/users/auth:
+    get:
+      summary: Check user authentication status
+      tags:
+        - Users
+      responses:
+        '200':
+          description: User is authenticated
+        '401':
+          description: Unauthorized
+  /api/users/logout:
+    get:
+      summary: Logout user
+      tags:
+        - Users
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User logged out successfully
+        '401':
+          description: Unauthorized
+  /api/attendance:
+    post:
+      summary: Record attendance
+      tags:
+        - Attendance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                punchType:
+                  type: string
+      responses:
+        '200':
+          description: Attendance recorded successfully
+        '400':
+          description: Bad request
+
+  /api/attendance/:user_id/:date:
+    get:
+      summary: Get attendance for a user on a specific date
+      tags:
+        - Attendance
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+        - name: date
+          in: path
+          required: true
+          description: Date (e.g., YYYY-MM-DD)
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attendance retrieved successfully
+        '401':
+          description: Unauthorized
+
+  /api/attendance/period-attendance:
+    get:
+      summary: Get period attendance
+      tags:
+        - Attendance
+      responses:
+        '200':
+          description: Period attendance retrieved successfully
+        '401':
+          description: Unauthorized
+
+  /api/attendance/:user_id:
+    get:
+      summary: Get all attendance records for a user
+      tags:
+        - Attendance
+      parameters:
+        - name: user_id
+          in: path
+          required: true
+          description: User ID
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Attendance records retrieved successfully
+        '401':
+          description: Unauthorized
+
+  /api/attendance/qr:
+    post:
+      summary: Generate QR code for attendance
+      tags:
+        - Attendance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # Define your request body properties here
+      responses:
+        '200':
+          description: QR code generated successfully
+        '400':
+          description: Bad request
+
+  /api/notifications/create:
+    post:
+      summary: Create a notification
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # Define your request body properties here
+      responses:
+        '200':
+          description: Notification created successfully
+        '400':
+          description: Bad request
+
+  /api/notifications/getall:
+    get:
+      summary: Get all notifications
+      tags:
+        - Notifications
+      responses:
+        '200':
+          description: Notifications retrieved successfully
+        '401':
+          description: Unauthorized
+
+  /api/notifications/updateStarredStatus:
+    put:
+      summary: Update starred status of a notification
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                # Define your request body properties here
+      responses:
+        '200':
+          description: Starred status updated successfully
+        '400':
+          description: Bad request
+
+# ... (other paths and definitions as needed)
