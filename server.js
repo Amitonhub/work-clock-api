@@ -6,7 +6,8 @@ const cors = require("cors");
 const cookieParser = require('cookie-parser');
 const corsOptions = require("./helpers/corsOptions");
 const listEndpoints = require('express-list-endpoints')
-
+var compression = require('compression');
+app.use(compression()); //add this as the 1st middleware
 
 // for swagger UI
 // const YAML = require('yamljs');
@@ -30,6 +31,11 @@ const Intro = (req, res) => {
     });
 }
 app.get('/', Intro);
+app.get('*.js', function(req, res, next) {
+    req.url = req.url + '.gz';
+    res.set('Content-Encoding', 'gzip');
+    next();
+});
 
 const port = process.env.PORT || 5000;
 

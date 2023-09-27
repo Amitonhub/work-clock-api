@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "bcrypt": "^5.1.0",
+        "compression": "^1.7.4",
         "cookie-parser": "^1.4.6",
         "cors": "^2.8.5",
         "dotenv": "^16.3.1",
@@ -17,15 +18,18 @@
         "express-async-handler": "^1.2.0",
         "express-list-endpoints": "^6.0.0",
         "express-swagger-generator": "^1.1.17",
-        "swagger-jsdoc": "^6.2.8",
-        "swagger-ui-express": "^5.0.0",
-        "yamljs": "^0.3.0",
         "jsonwebtoken": "^9.0.0",
         "moment": "^2.29.4",
         "moment-timezone": "^0.5.43",
         "mongoose": "^7.3.1",
-        "nodemon": "^3.0.1"
+        "nodemon": "^3.0.1",
+        "swagger-jsdoc": "^6.2.8",
+        "swagger-ui-express": "^5.0.0",
+        "yamljs": "^0.3.0"
     },
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "devDependencies": {
+        "compression-webpack-plugin": "^10.0.0"
+    }
 }
